@@ -1,0 +1,47 @@
+---
+# Workflow list definition
+# This list describes the order that the Jobs execute. The "main" job is always 
+# executed first, followed in order of the Jobs listed in this Workflow block
+workflow:
+  # "second_job" is the name of the Job that runs after "main"
+  - second_job
+
+# Shared definition block
+# This is where you would define any attributes that all your jobs will 
+# inherit. In our example, we state that all our Jobs will use the same Docker
+# container for building in.
+shared:
+  # Docker image to use as the desired build container. This typically takes the
+  # form of "repo_name". Alternatively, you can define the image as 
+  # "repo_name:tag_label".
+  # 
+  # (Source: https://hub.docker.com/r/library/buildpack-deps/)
+  image: buildpack-deps
+
+# Job definition block
+# "main" is a default job that all pipelines have
+jobs:
+  # Jobs are defined by name.
+  # All pipelines have "main" implicitly defined. The definitions in your 
+  # screwdriver.yaml file will override the implied defaults.
+  main:
+    # Steps is the list of commands to execute.
+    steps:
+
+      # Each step takes the form "step_name: command_to_run".
+      # The "step_name" is a convient label to reference it by. The 
+      # "command_to_run" is the single command that is executed during this 
+      # step.
+      - hello: echo hi world
+  # We define another Job called "second_job". In this Job, we intend on running
+  # a different set of commands.
+  second_job: 
+    steps:
+      # The "make_target" step calls a Makefile target to perform some set of
+      # actions. This is incredibly useful when you need to perform a multi-line
+      # command.
+      - make_target: make greetings
+      # The "run_arbitrary_script" executes a script. This is an alternative to
+      # a Makefile target where you want to run a series of commands related to
+      # this step
+      - run_arbitrary_script: ./my_script.sh
