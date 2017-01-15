@@ -32,7 +32,7 @@ jobs:
       # The "step_name" is a convient label to reference it by. The 
       # "command_to_run" is the single command that is executed during this 
       # step.
-      - hello: echo hi world
+      - hello: echo Hello World
   # We define another Job called "second_job". In this Job, we intend on running
   # a different set of commands.
   second_job: 
