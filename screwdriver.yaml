@@ -14,17 +14,17 @@ shared:
 # Job definition block
 # "main" is a default job that all pipelines have
 jobs:
-  # Requires is a single job name or array of job names that will trigger the job to run.
-  # Jobs defined with "requires: ~pr" are started by pull-request events.
-  # Jobs defined with "requires: ~commit" are started by push events.
-  # Jobs defined with "requires: ~sd@123:main" are started by job "main" from pipeline "123".
-  # Jobs defined with "requires: main" are started after "main" is done.
-  # Jobs defined with "requires: [deploy-west, deploy-east] are started after "deploy-west" and "deploy-east" are both done running successfully.
-  requires: [~pr, ~commit]
   # Jobs are defined by name.
   # All pipelines have "main" implicitly defined. The definitions in your
   # screwdriver.yaml file will override the implied defaults.
   main:
+    # Requires is a single job name or array of job names that will trigger the job to run.
+    # Jobs defined with "requires: ~pr" are started by pull-request events.
+    # Jobs defined with "requires: ~commit" are started by push events.
+    # Jobs defined with "requires: ~sd@123:main" are started by job "main" from pipeline "123".
+    # Jobs defined with "requires: main" are started after "main" is done.
+    # Jobs defined with "requires: [deploy-west, deploy-east] are started after "deploy-west" and "deploy-east" are both done running successfully.
+    requires: [~pr, ~commit]
     # Steps is the list of commands to execute.
     steps:
 
