@@ -27,7 +27,6 @@ jobs:
     requires: [~pr, ~commit]
     # Steps is the list of commands to execute.
     steps:
-
       # Each step takes the form "step_name: command_to_run".
       # The "step_name" is a convenient label to reference it by. The
       # "command_to_run" is the single command that is executed during this
