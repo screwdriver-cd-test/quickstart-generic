@@ -1,11 +1,4 @@
 ---
-# Workflow list definition
-# This list describes the order that the Jobs execute. The "main" job is always
-# executed first, followed in order of the Jobs listed in this Workflow block
-workflow:
-  # "second_job" is the name of the Job that runs after "main"
-  - second_job
-
 # Shared definition block
 # This is where you would define any attributes that all your jobs will
 # inherit. In our example, we state that all our Jobs will use the same Docker
@@ -25,9 +18,15 @@ jobs:
   # All pipelines have "main" implicitly defined. The definitions in your
   # screwdriver.yaml file will override the implied defaults.
   main:
+    # Requires is a single job name or array of job names that will trigger the job to run.
+    # Jobs defined with "requires: ~pr" are started by pull-request events.
+    # Jobs defined with "requires: ~commit" are started by push events.
+    # Jobs defined with "requires: ~sd@123:main" are started by job "main" from pipeline "123".
+    # Jobs defined with "requires: main" are started after "main" is done.
+    # Jobs defined with "requires: [deploy-west, deploy-east] are started after "deploy-west" and "deploy-east" are both done running successfully.
+    requires: [~pr, ~commit]
     # Steps is the list of commands to execute.
     steps:
-
       # Each step takes the form "step_name: command_to_run".
       # The "step_name" is a convenient label to reference it by. The
       # "command_to_run" is the single command that is executed during this
@@ -38,6 +37,7 @@ jobs:
   # We define another Job called "second_job". In this Job, we intend on running
   # a different set of commands.
   second_job:
+    requires: main
     steps:
       # The "make_target" step calls a Makefile target to perform some set of
       # actions. This is incredibly useful when you need to perform a multi-line
