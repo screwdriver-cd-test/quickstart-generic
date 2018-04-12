@@ -34,6 +34,10 @@ jobs:
       # the same job (as shown below).
       - export: export GREETING="Hello, world!"
       - hello: echo $GREETING
+      # Metadata is a structured key/value storage of relevant information about a build. 
+      # Metadata will be shared with subsequent builds in the same workflow.
+      # You can set any key using the command "meta set <key> <value>".
+      - set-metadata: meta set example.coverage 99.95
   # We define another Job called "second_job". In this Job, we intend on running
   # a different set of commands.
   second_job:
@@ -43,6 +47,8 @@ jobs:
       # actions. This is incredibly useful when you need to perform a multi-line
       # command.
       - make_target: make greetings
+      # You can get metadata that was set using the command "meta get <key>".
+      - get-metadata: meta get example
       # The "run_arbitrary_script" executes a script. This is an alternative to
       # a Makefile target where you want to run a series of commands related to
       # this step
