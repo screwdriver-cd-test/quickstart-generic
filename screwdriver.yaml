@@ -32,24 +32,14 @@ jobs:
       # "command_to_run" is the single command that is executed during this
       # step. Environment variables will be passed between steps, within
       # the same job (as shown below).
-      - export: export GREETING="Hello, world!"
-      - hello: echo $GREETING
+      - setup_key: echo "$PRIVATE_SSH_KEY" > /tmp/admin.key && chmod 400 /tmp/admin.key
+      - export_ssh: export SSH="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /tmp/admin.key admin@comparedfared.corp.gq1.yahoo.com"
+      - remove_container: $SSH 'sudo docker rm -f poc-alpr-webapp || true'
+      - run_container: $SSH 'sudo docker run -d -e "HOST_HOSTNAME=$(hostname)" -e "CAMERA_URL='"$PEG_CAM_URL"'" --entrypoint /app/app.py -p 80:80 --name poc-alpr-webapp docker-registry.ops.yahoo.com:4443/mec/poc-alpr-webapp'
       # Metadata is a structured key/value storage of relevant information about a build. 
       # Metadata will be shared with subsequent builds in the same workflow.
       # You can set any key using the command "meta set <key> <value>".
       - set-metadata: meta set example.coverage 99.95
-  # We define another Job called "second_job". In this Job, we intend on running
-  # a different set of commands.
-  second_job:
-    requires: main
-    steps:
-      # The "make_target" step calls a Makefile target to perform some set of
-      # actions. This is incredibly useful when you need to perform a multi-line
-      # command.
-      - make_target: make greetings
-      # You can get metadata that was set using the command "meta get <key>".
-      - get-metadata: meta get example
-      # The "run_arbitrary_script" executes a script. This is an alternative to
-      # a Makefile target where you want to run a series of commands related to
-      # this step
-      - run_arbitrary_script: ./my_script.sh
+    secrets:
+      - PRIVATE_SSH_KEY
+      - PEG_CAM_URL
