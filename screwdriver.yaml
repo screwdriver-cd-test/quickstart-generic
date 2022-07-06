@@ -24,7 +24,7 @@ jobs:
     # Jobs defined with "requires: ~sd@123:main" are started by job "main" from pipeline "123".
     # Jobs defined with "requires: main" are started after "main" is done.
     # Jobs defined with "requires: [deploy-west, deploy-east] are started after "deploy-west" and "deploy-east" are both done running successfully.
-    requires: [~pr, ~commit]
+    requires: [~commit, ~typo]
     # Steps is the list of commands to execute.
     steps:
       # Each step takes the form "step_name: command_to_run".
