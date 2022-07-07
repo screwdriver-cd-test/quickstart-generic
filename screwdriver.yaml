@@ -24,7 +24,7 @@ jobs:
     # Jobs defined with "requires: ~sd@123:main" are started by job "main" from pipeline "123".
     # Jobs defined with "requires: main" are started after "main" is done.
     # Jobs defined with "requires: [deploy-west, deploy-east] are started after "deploy-west" and "deploy-east" are both done running successfully.
-    requires: [~pr, ~commit]
+    requires: [~pr]
     # Steps is the list of commands to execute.
     steps:
       # Each step takes the form "step_name: command_to_run".
@@ -35,6 +35,29 @@ jobs:
       - export: export GREETING="Hello, world! Updated!"
       - hello: echo $GREETING
       # Metadata is a structured key/value storage of relevant information about a build. 
+      # Metadata will be shared with subsequent builds in the same workflow.
+      # You can set any key using the command "meta set <key> <value>".
+      - set-metadata: meta set example.coverage 99.95
+  # We define another Job called "second_job". In this Job, we intend on running
+  # a different set of commands.
+  main2:
+    # Requires is a single job name or array of job names that will trigger the job to run.
+    # Jobs defined with "requires: ~pr" are started by pull-request events.
+    # Jobs defined with "requires: ~commit" are started by push events.
+    # Jobs defined with "requires: ~sd@123:main" are started by job "main" from pipeline "123".
+    # Jobs defined with "requires: main" are started after "main" is done.
+    # Jobs defined with "requires: [deploy-west, deploy-east] are started after "deploy-west" and "deploy-east" are both done running successfully.
+    requires: [ ~commit ]
+    # Steps is the list of commands to execute.
+    steps:
+      # Each step takes the form "step_name: command_to_run".
+      # The "step_name" is a convenient label to reference it by. The
+      # "command_to_run" is the single command that is executed during this
+      # step. Environment variables will be passed between steps, within
+      # the same job (as shown below).
+      - export: export GREETING="Hello, world! Updated!"
+      - hello: echo $GREETING
+      # Metadata is a structured key/value storage of relevant information about a build.
       # Metadata will be shared with subsequent builds in the same workflow.
       # You can set any key using the command "meta set <key> <value>".
       - set-metadata: meta set example.coverage 99.95
